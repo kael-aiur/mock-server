@@ -23,7 +23,11 @@ import leap.lang.Out;
 import leap.lang.Strings;
 import leap.lang.codec.Base64;
 import leap.lang.codec.MD5;
+import leap.lang.http.ContentTypes;
+import leap.lang.http.Headers;
 import leap.lang.json.JSON;
+import leap.lang.logging.Log;
+import leap.lang.logging.LogFactory;
 import org.mockserver.integration.ClientAndProxy;
 import org.mockserver.integration.ClientAndServer;
 import org.mockserver.model.HttpRequest;
@@ -42,6 +46,8 @@ import java.util.Map;
 @Bean(type = CallBacker.class)
 public class GDPSBServer implements CallBacker{
 
+    private static final Log log = LogFactory.get(GDPSBServer.class);
+    
     private static final String SALT = "gaSms12#654";
     private static final String UID = "jwt";
     private static final String UPW = MD5.hex("jwt@2017".getBytes(Charsets.UTF_8)).toLowerCase();
@@ -101,7 +107,7 @@ public class GDPSBServer implements CallBacker{
             if(!EID.equals(para.get("eId"))){
                 return false;
             }
-            
+            log.info("省公安厅短信接口已经接收到短信请求，并且向以下号码推送短信：[{}],短信内容[{}]",para.get("mobiles"),para.get("content"));
             return true;
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
@@ -129,7 +135,8 @@ public class GDPSBServer implements CallBacker{
         }else {
             status = 400;
         }
-        return HttpResponse.response().withBody(JsonBody.json(returns)).withStatusCode(status);
+        return HttpResponse.response().withHeader(Headers.CONTENT_TYPE,ContentTypes.APPLICATION_JSON_UTF8)
+                .withBody(JsonBody.json(returns)).withStatusCode(status);
     }
     
 }
