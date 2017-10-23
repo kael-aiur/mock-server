@@ -44,7 +44,15 @@ public class HeaderPrintServer implements CallBacker {
     public HttpResponse callback(HttpRequest request, AppContext ctx, ClientAndServer mockServer,
                                  ClientAndProxy proxy) {
         Map<String,Object> returns = new HashMap<>();
-        request.getHeaders().forEach(header -> returns.put(header.getName().getValue(), JSON.encode(header.getValues().stream().map(s -> s.getValue()).toArray())));
+        request.getHeaders().forEach(header -> {
+            Object[] o = header.getValues().stream().map(s -> s.getValue()).toArray();
+            if(o.length == 1){
+                returns.put(header.getName().getValue(), o[0]);
+            }else {
+                returns.put(header.getName().getValue(), o);
+            }
+            
+        });
         return HttpResponse.response().withHeader(Headers.CONTENT_TYPE, ContentTypes.APPLICATION_JSON_UTF8)
                 .withBody(JsonBody.json(returns)).withStatusCode(200);
     }
