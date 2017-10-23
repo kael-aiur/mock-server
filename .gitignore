@@ -27,3 +27,4 @@ target
 
 # Other Files #
 derby.log
+*.log
