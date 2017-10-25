@@ -41,9 +41,7 @@ public class JsonpResponseServer implements CallBacker{
         returns.add(New.hashMap("id","2","name","api2"));
         
         Map<String, Object> headers = new HashMap<>();
-        request.getHeaders().forEach(header -> {
-            headers.put(header.getName().getValue(),header.getValues().get(0).getValue());
-        });
+        request.getHeaders().forEach(header -> headers.put(header.getName().getValue(),header.getValues().get(0).getValue()));
         
         StringWriter sw = new StringWriter();
         JsonWriter jw = JSON.createWriter(sw);
