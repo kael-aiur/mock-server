@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * 服务接口，返回所有请求头
  * @author kael.
  */
 @Bean(type = CallBacker.class)
